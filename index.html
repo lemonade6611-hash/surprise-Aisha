@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yellow Scrapbook Template</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      padding: 20px;
+    }
+
+    /* Main 9:16 Poster Container */
+    .scrapbook-canvas {
+      position: relative;
+      width: 420px;
+      height: 750px;
+      background-color: #fef9db;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      transform: scale(0.9); /* Fits neatly on laptop screens */
+    }
+
+    /* Background Doodles SVG Layer */
+    .bg-doodles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Yellow Gingham Middle Band */
+    .gingham-section {
+      position: absolute;
+      top: 150px;
+      left: 0;
+      width: 100%;
+      height: 255px;
+      background-color: #ffffff;
+      background-image: 
+        linear-gradient(90deg, rgba(255, 232, 105, 0.55) 50%, transparent 50%),
+        linear-gradient(rgba(255, 232, 105, 0.55) 50%, transparent 50%);
+      background-size: 28px 28px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 16px;
+    }
+
+    /* Blank White Photo Frame */
+    .photo-frame {
+      width: 318px;
+      height: 215px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ccc;
+      font-size: 13px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Top-Left Felt Star Sticker */
+    .felt-star {
+      position: absolute;
+      top: 18px;
+      left: -8px;
+      width: 155px;
+      height: 155px;
+      z-index: 4;
+      filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.12));
+    }
+
+    /* Top-Right Moon PNG Sticker */
+    .moon-sticker {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 4;
+      filter: drop-shadow(0 4px 10px rgba(208, 204, 204, 0.18));
+    }
+
+    /* Spotify Lyric Card */
+    .spotify-card {
+      position: absolute;
+      top: 405px;
+      left: 0;
+      width: 245px;
+      height: 220px;
+      background-color: #fbd065;
+      z-index: 3;
+      padding: 24px 18px 16px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .track-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .album-art {
+      width: 28px;
+      height: 28px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, #e76f51, #f4a261, #264653);
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .track-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .track-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #4a3510;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-artist {
+      font-size: 9.5px;
+      font-weight: 500;
+      color: #6b4e1b;
+    }
+
+    .lyrics-body {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.22;
+      color: #4a3510;
+      letter-spacing: -0.3px;
+      z-index: 2;
+      margin: 8px 0;
+    }
+
+    .lyrics-note {
+      font-family: 'Caveat', cursive;
+      font-size: 11px;
+      font-weight: 600;
+      color: #7d5a1e;
+      letter-spacing: 0.5px;
+      margin-left: 4px;
+    }
+
+    .spotify-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #4a3510;
+      font-weight: 700;
+      font-size: 13px;
+      z-index: 2;
+    }
+
+    /* Card Hand-drawn Overlay Doodles */
+    .card-doodles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Right Star Sticker */
+    .yellow-star-sticker {
+      position: absolute;
+      top: 392px;
+      right: 6px;
+      width: 120px;
+      height: 120px;
+      z-index: 4;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
+    }
+
+    /* Cute Cats PNG Sticker */
+    .cats-sticker {
+      position: absolute;
+      top: 472px;
+      right: -5px;
+      width: 250px;
+      height: 300px;
+      object-fit: contain;
+      z-index: 5;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scrapbook-canvas">
+
+    <!-- Background Doodles -->
+    <svg class="bg-doodles" viewBox="0 0 420 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 80 150 Q 200 110 310 20" stroke="#78663a" stroke-width="1.5" stroke-dasharray="5 6" />
+      <path d="M 110 90 Q 150 50 180 10" stroke="#78663a" stroke-width="1.5" stroke-dasharray="4 6" />
+      <path d="M 220 15 C 215 0, 200 5, 205 20 C 210 30, 220 40, 220 42 C 220 40, 232 30, 235 20 C 240 5, 225 0, 220 15 Z" stroke="#6b5c35" stroke-width="1.5" fill="#f5ecc6"/>
+      <g stroke="#d9a426" stroke-width="2" stroke-linecap="round">
+        <line x1="188" y1="60" x2="188" y2="88" />
+        <line x1="174" y1="74" x2="202" y2="74" />
+        <line x1="178" y1="64" x2="198" y2="84" />
+        <line x1="198" y1="64" x2="178" y2="84" />
+      </g>
+      <path d="M 140 620 Q 230 670 300 740" stroke="#78663a" stroke-width="1.5" stroke-dasharray="4 7" />
+      <path d="M 240 615 Q 210 680 235 745" stroke="#78663a" stroke-width="1.5" stroke-dasharray="4 7" />
+      <path d="M 42 685 C 35 668, 18 675, 24 692 C 30 704, 42 715, 42 718 C 42 715, 56 702, 60 688 C 64 670, 47 668, 42 685 Z" fill="#f7c844" stroke="#5c4616" stroke-width="1.6"/>
+      <polygon points="100,715 104,726 116,726 107,733 110,744 100,737 90,744 93,733 84,726 96,726" stroke="#5c4616" stroke-width="1.4" fill="none"/>
+      <polygon points="295,660 299,670 310,670 301,677 304,687 295,680 286,687 289,677 280,670 291,670" stroke="#5c4616" stroke-width="1.4" fill="none"/>
+      <polygon points="398,505 402,515 412,515 404,521 407,531 398,525 389,531 392,521 384,515 394,515" stroke="#5c4616" stroke-width="1.4" fill="none"/>
+      <g stroke="#d9a426" stroke-width="2.2" stroke-linecap="round">
+        <line x1="355" y1="682" x2="355" y2="712" />
+        <line x1="340" y1="697" x2="370" y2="697" />
+        <line x1="344" y1="686" x2="366" y2="708" />
+        <line x1="366" y1="686" x2="344" y2="708" />
+      </g>
+    </svg>
+
+    <!-- Top Left Stitched Felt Star Sticker -->
+    <svg class="felt-star" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 80 12 L 99 50 L 141 56 L 110 86 L 118 128 L 80 108 L 42 128 L 50 86 L 19 56 L 61 50 Z" fill="#f7f4eb" stroke="#e0d8c3" stroke-width="8" stroke-linejoin="round" />
+      <path d="M 80 16 L 97 52 L 137 58 L 108 86 L 115 125 L 80 106 L 45 125 L 52 86 L 23 58 L 63 52 Z" fill="#e8c468" stroke="#c99e38" stroke-width="2" stroke-linejoin="round" />
+      <path d="M 80 23 L 94 54 L 129 59 L 104 83 L 110 117 L 80 100 L 50 117 L 56 83 L 31 59 L 66 54 Z" fill="none" stroke="#8c6718" stroke-width="1.8" stroke-dasharray="4 4" stroke-linejoin="round" />
+    </svg>
+
+    <!-- Top Right Moon PNG Sticker -->
+    <img src="moon.png" alt="Moon" class="moon-sticker">
+
+    <!-- Middle Yellow Gingham Section + White Photo Cutout -->
+    <div class="gingham-section">
+      <div class="photo-frame">
+        <img src="image.jpeg" alt="">
+        <!-- Put <img src="your-photo.jpg"> here if desired -->
+      </div>
+    </div>
+
+    <!-- Spotify Lyric Card -->
+    <div class="spotify-card" id="spotifyCard">
+      <svg class="card-doodles" viewBox="0 0 245 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 65 25 Q 90 12 115 22" stroke="#85581A" stroke-width="1" stroke-dasharray="3 3"/>
+        <ellipse cx="121" cy="20" rx="5" ry="3.5" fill="#f4e04d" stroke="#5c3d0e" stroke-width="1.2"/>
+        <path d="M 119 17 C 117 12, 123 12, 121 17" stroke="#5c3d0e" stroke-width="1" fill="#fff"/>
+        <path d="M 100 220 L 105 208 L 110 220 L 118 206 L 124 220 L 135 205 L 142 220 L 155 204 L 162 220 L 175 207 L 183 220 L 198 205 L 205 220 L 218 208 L 225 220" stroke="#6b8e23" stroke-width="2" fill="#8ab833" opacity="0.7"/>
+        <line x1="162" y1="215" x2="162" y2="190" stroke="#556b2f" stroke-width="1.5"/>
+        <circle cx="162" cy="190" r="6" fill="#ffd700" stroke="#785212" stroke-width="1.2"/>
+        <circle cx="162" cy="190" r="2" fill="#785212"/>
+        <line x1="185" y1="215" x2="188" y2="182" stroke="#556b2f" stroke-width="1.5"/>
+        <circle cx="188" cy="182" r="7" fill="#ffd700" stroke="#785212" stroke-width="1.2"/>
+        <circle cx="188" cy="182" r="2.2" fill="#785212"/>
+        <line x1="212" y1="215" x2="215" y2="188" stroke="#556b2f" stroke-width="1.5"/>
+        <circle cx="215" cy="188" r="6.5" fill="#ffd700" stroke="#785212" stroke-width="1.2"/>
+        <circle cx="215" cy="188" r="2" fill="#785212"/>
+      </svg>
+
+      <div class="track-header">
+        <div class="album-art" id="albumArt"></div>
+        <div class="track-meta">
+          <div class="track-title" id="trackTitle">Achchi Lagti Ho</div>
+          <div class="track-artist" id="trackArtist">Udit Narayan</div>
+        </div>
+      </div>
+
+      <!-- Live Synced Looping Lyrics Container -->
+      <div class="lyrics-body" id="lyricsBox">
+        Achchi lagti ho... <span class="lyrics-note">TAP TO PLAY</span>
+      </div>
+
+      <div class="spotify-footer" style="justify-content: space-between; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#4a3510">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+          <span>Spotify</span>
+        </div>
+        <button id="changeSongBtn" style="background: rgba(74, 53, 16, 0.12); border: 1px solid #4a3510; border-radius: 10px; padding: 2px 7px; font-size: 10px; font-weight: 700; color: #4a3510; cursor: pointer;">
+          ↻ Change Song
+        </button>
+      </div>
+
+      <!-- Local MP3 Audio Player (Loops infinitely) -->
+      <audio id="audioPlayer" src="song.mp3" loop autoplay></audio>
+    </div>
+
+    <!-- Right Star Sticker -->
+    <svg class="yellow-star-sticker" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="60,8 75,42 112,46 84,71 92,107 60,88 28,107 36,71 8,46 45,42" fill="#ffeb1b" stroke="#ffffff" stroke-width="8" stroke-linejoin="round"/>
+    </svg>
+
+    <!-- Cute Cats PNG Sticker -->
+    <img src="cat.png" alt="Cats" class="cats-sticker">
+
+  </div>
+
+ <script>
+  // lyrics.js
+// Local MP3 + synced lyrics. Uses ONLY the <audio> tag and (optionally) lrclib.net.
+// No iTunes / Apple Music / Spotify API is used anywhere.
+(function () {
+  'use strict';
+
+  // Green status box in the bottom-left corner. Set to false once everything works.
+  const SHOW_DEBUG = false;
+
+  // 1) BEST: timed lyrics from timer.html, one per row like:  [00:12.50] line text
+  const MY_TIMED = `
+
+`;
+
+  // 2) OK: plain lyrics, one line per row (spread evenly over the song, so timing drifts)
+  const MY_PLAIN = `
+
+`;
+
+  // Only for LRCLIB lyrics: second of the FULL song where your clip starts.
+  // Tune it live with the arrow keys, then copy the value from the green box here.
+  const CLIP_START = 104;   // clip starts at 1:44 of the full song
+
+  // Only for YOUR lyrics (MY_TIMED / MY_PLAIN): shift every line by this many seconds.
+  // Positive = lines appear later, negative = earlier. Tune live with the arrow keys, then copy the value here.
+  const MY_SHIFT = 0;
+
+  // Lines LRCLIB is MISSING, timed against YOUR CLIP (00:00 = start of your mp3), one per row:
+  //   [00:01.50] your line text
+  // They are merged into the LRCLIB lyrics and move together with them when you nudge the offset.
+  const MY_EXTRA = `
+
+`;
+
+  // ---------------------------------------------------------------
+  const $ = id => document.getElementById(id);
+  const lyricsBox = $('lyricsBox');
+  const audio = $('audioPlayer');
+  const titleEl = $('trackTitle');
+  const artistEl = $('trackArtist');
+  const changeBtn = $('changeSongBtn');
+
+  let lines = [];      // [{ time, text }]  or  [{ frac, text }] for evenly spaced lyrics
+  let source = 'none';
+  let token = 0;       // ignores late network results after a song change
+  let lastKey = '';
+  let audioErr = 0;
+  let offset = 0;            // seconds added to the audio clock (LRCLIB lyrics only)
+  let offsetApplies = false;
+
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const rowsOf = text => text.split('\n').map(s => s.trim()).filter(Boolean);
+  const evenly = rows => rows.map((text, i) => ({ frac: i / rows.length, text }));
+
+  // [mm:ss.xx] text  ->  [{ time(seconds), text }], sorted by time
+  function parseLRC(text) {
+    const out = [];
+    for (const raw of text.split('\n')) {
+      const re = /\[(\d{1,3}):(\d{1,2}(?:\.\d{1,3})?)\]/g;
+      const stamps = [];
+      let m;
+      let end = 0;
+      while ((m = re.exec(raw)) !== null) {
+        stamps.push(parseInt(m[1], 10) * 60 + parseFloat(m[2]));
+        end = re.lastIndex;
+      }
+      const lyric = raw.slice(end).trim();
+      if (stamps.length && lyric) stamps.forEach(t => out.push({ time: t, text: lyric }));
+    }
+    return out.sort((a, b) => a.time - b.time);
+  }
+
+  // Which line is active at time t? (-1 = before the first line)
+  function currentIndex(t) {
+    t += offset;
+    const d = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 210;
+    let idx = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const lt = lines[i].time !== undefined ? lines[i].time : lines[i].frac * d;
+      if (t >= lt) idx = i; else break;
+    }
+    return idx;
+  }
+
+  // The lyrics are a pure function of audio.currentTime: no timers of their own.
+  function render() {
+    const t = audio.currentTime || 0;
+    let html, key;
+
+    if (audioErr) {
+      key = 'err';
+      html = `Can't load the MP3 <span class="lyrics-note">check filename and folder</span>`;
+    } else if (audio.paused && t === 0) {
+      key = 'idle:' + titleEl.textContent;
+      html = `${esc(titleEl.textContent)} <span class="lyrics-note">TAP TO PLAY</span>`;
+    } else if (!lines.length) {
+      key = 'nolines:' + source;
+      html = source === 'loading'
+        ? 'Loading lyrics...'
+        : `\u266A <span class="lyrics-note">no lyrics found</span>`;
+    } else {
+      const idx = currentIndex(t);
+      key = 'i' + idx + ':' + lines.length;
+      const cur = idx >= 0 ? lines[idx].text : '\u266A';
+      const next = lines[idx + 1] ? lines[idx + 1].text : '';
+      html = `${esc(cur)}<br><span style="opacity:.55;font-size:13.5px;">${esc(next)}</span>`;
+    }
+
+    if (key !== lastKey) {
+      lastKey = key;
+      lyricsBox.innerHTML = html;
+    }
+  }
+
+  // ---- debug box ----
+  const hud = document.createElement('div');
+  hud.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:99;background:rgba(0,0,0,.82);' +
+    'color:#7CFC00;font:11px/1.4 monospace;padding:6px 8px;border-radius:6px;pointer-events:none;white-space:pre';
+  if (SHOW_DEBUG) document.body.appendChild(hud);
+
+  function updateHud() {
+    if (!SHOW_DEBUG) return;
+    const dur = isFinite(audio.duration) ? audio.duration.toFixed(1) : '?';
+    hud.textContent =
+      'lyrics: ' + source + ' (' + lines.length + ' lines)\n' +
+      'time: ' + (audio.currentTime || 0).toFixed(1) + ' / ' + dur + 's   paused: ' + audio.paused + '\n' +
+      'readyState: ' + audio.readyState + '   audio error: ' + (audioErr || 'none') +
+      (lines.length ? '\noffset: ' + offset.toFixed(1) + 's   keys: \u2190 \u2192 = 0.5s,  [ ] = 5s' : '');
+  }
+
+  // ---- lyrics sources: your timed > your plain > LRCLIB ----
+  async function setLyrics(track, artist, useCustom) {
+    const my = ++token;
+    lines = [];
+    source = 'loading';
+    lastKey = '';
+    offsetApplies = false;
+    offset = 0;
+
+    if (useCustom) {
+      const timed = parseLRC(MY_TIMED);
+      if (timed.length) { lines = timed; source = 'your timed lyrics'; offset = MY_SHIFT; return; }
+      const rows = rowsOf(MY_PLAIN);
+      if (rows.length) { lines = evenly(rows); source = 'your plain lyrics (even spacing)'; offset = MY_SHIFT; return; }
+    }
+
+    try {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => ctrl.abort(), 5000);
+      const res = await fetch(
+        'https://lrclib.net/api/search?q=' + encodeURIComponent(track + ' ' + artist),
+        { signal: ctrl.signal }
+      );
+      clearTimeout(to);
+      const results = await res.json();
+      if (my !== token) return;
+
+      const list = Array.isArray(results) ? results : [];
+      const synced = list.filter(r => r.syncedLyrics);
+      const dur = audio.duration;
+
+      if (synced.length) {
+        if (isFinite(dur)) {
+          synced.sort((a, b) => Math.abs((a.duration || 0) - dur) - Math.abs((b.duration || 0) - dur));
+        }
+        const parsed = parseLRC(synced[0].syncedLyrics);
+        if (parsed.length) {
+          lines = parsed;
+          source = 'LRCLIB synced';
+          if (useCustom) {
+            const extra = parseLRC(MY_EXTRA).map(l => ({ time: l.time + CLIP_START, text: l.text }));
+            if (extra.length) {
+              lines = parsed.concat(extra).sort((a, b) => a.time - b.time);
+              source += ' + ' + extra.length + ' of your lines';
+            }
+          }
+          offsetApplies = true;
+          offset = useCustom ? CLIP_START : 0;
+          if (isFinite(dur) && Math.abs((synced[0].duration || 0) - dur) > 3) {
+            source += ' (WARNING: length differs by ' + Math.round(Math.abs(synced[0].duration - dur)) + 's: align with the arrow keys)';
+          }
+          return;
+        }
+      }
+
+      const plain = list.find(r => r.plainLyrics);
+      if (plain) {
+        lines = evenly(rowsOf(plain.plainLyrics));
+        source = 'LRCLIB plain (even spacing)';
+        return;
+      }
+    } catch (err) {
+      console.warn('LRCLIB failed:', err);
+    }
+
+    if (my === token) source = 'none found';
+  }
+
+  // ---- song loading ----
+  function loadSong(track, artist, file, useCustom) {
+    titleEl.textContent = track;
+    artistEl.textContent = artist;
+    audioErr = 0;
+    audio.loop = true;
+    if (audio.getAttribute('src') !== file) {
+      audio.src = file;
+      audio.load();
+    }
+    audio.play().catch(() => {});   // if the browser blocks autoplay, the first click starts it
+    setLyrics(track, artist, useCustom);
+  }
+
+  audio.addEventListener('error', () => { audioErr = audio.error ? audio.error.code : 'unknown'; });
+  audio.addEventListener('canplay', () => { audioErr = 0; });
+
+  // Any click starts the song if it isn't playing. It never pauses it.
+  document.addEventListener('click', () => {
+    if (audio.paused) audio.play().catch(() => {});
+  });
+
+  changeBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const track = prompt('Enter Song Name:', titleEl.textContent);
+    if (!track) return;
+    const artist = prompt('Enter Artist Name:', artistEl.textContent) || '';
+    const file = prompt('Enter MP3 filename in your folder:', 'song.mp3') || 'song.mp3';
+    loadSong(track.trim(), artist.trim(), file.trim(), false);
+  });
+
+  // ---- Tap-along timing: press T, paste your lyrics, press Space when each line STARTS ----
+  const TAP_LATENCY = 0.2;   // seconds: people tap a little late, so we shift back
+  let tapRows = [];
+  let tapDone = [];
+  let tapping = false;
+
+  const panel = document.createElement('div');
+  panel.style.cssText = 'position:fixed;top:8px;left:8px;z-index:100;width:290px;background:rgba(0,0,0,.9);color:#fff;' +
+    'font:12px/1.4 sans-serif;padding:10px;border-radius:8px;display:none';
+  panel.innerHTML =
+    '<b>Tap-along timing</b> (T closes)<br>' +
+    '<textarea id="tapIn" rows="6" style="width:100%;margin:6px 0" placeholder="Paste your lyrics, one line per row"></textarea>' +
+    'Speed <select id="tapSpeed"><option value="1">1x</option><option value="0.75">0.75x</option><option value="0.5">0.5x</option></select> ' +
+    '<button id="tapGo">Start from 0:00</button> <button id="tapCopy">Copy result</button>' +
+    '<div id="tapNow" style="margin:8px 0;font-weight:700"></div>' +
+    '<textarea id="tapOut" rows="6" style="width:100%" readonly></textarea>';
+  document.body.appendChild(panel);
+
+  const tapIn = panel.querySelector('#tapIn');
+  const tapOutEl = panel.querySelector('#tapOut');
+  const tapNow = panel.querySelector('#tapNow');
+  const tapSpeed = panel.querySelector('#tapSpeed');
+
+  const stamp = t => {
+    const total = Math.round(t * 100) / 100;
+    const m = Math.floor(total / 60);
+    return '[' + String(m).padStart(2, '0') + ':' + (total - m * 60).toFixed(2).padStart(5, '0') + ']';
+  };
+
+  // Shows the tapped lines live on the card so you can see them working
+  function tapApply() {
+    tapOutEl.value = tapDone.map(l => stamp(l.time) + ' ' + l.text).join('\n');
+    token++;                          // cancels any pending LRCLIB result
+    lines = tapDone.slice();
+    source = 'your tapped lyrics';
+    offsetApplies = false;
+    offset = 0;
+    lastKey = '';
+    tapNow.textContent = tapping
+      ? 'Next: ' + tapRows[tapDone.length] + '   (Space = line starts now, Backspace = undo)'
+      : 'Done! Press Copy result, then paste it between the backticks of MY_TIMED in lyrics.js.';
+  }
+
+  function tapMark() {
+    tapDone.push({
+      time: Math.max(0, audio.currentTime - TAP_LATENCY * audio.playbackRate),
+      text: tapRows[tapDone.length]
+    });
+    if (tapDone.length >= tapRows.length) { tapping = false; audio.playbackRate = 1; }
+    tapApply();
+  }
+
+  function tapUndo() {
+    if (tapDone.length) { tapDone.pop(); tapApply(); }
+  }
+
+  panel.querySelector('#tapGo').addEventListener('click', e => {
+    e.currentTarget.blur();           // so Space doesn't re-press the button
+    tapRows = rowsOf(tapIn.value);
+    if (!tapRows.length) { tapNow.textContent = 'Paste your lyrics first.'; return; }
+    tapDone = [];
+    tapping = true;
+    audio.playbackRate = parseFloat(tapSpeed.value) || 1;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    tapApply();
+  });
+
+  panel.querySelector('#tapCopy').addEventListener('click', e => {
+    e.currentTarget.blur();
+    tapOutEl.select();
+    try { document.execCommand('copy'); } catch (err) { /* select + Ctrl+C works too */ }
+  });
+
+  // Align LRCLIB timing to your clip. If the shown line is BEHIND the singing, press right.
+  document.addEventListener('keydown', e => {
+    if (/^(TEXTAREA|INPUT|SELECT)$/.test(document.activeElement.tagName)) return;
+    if (e.key === 't' || e.key === 'T') {
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      return;
+    }
+    if (tapping && e.code === 'Space') { e.preventDefault(); tapMark(); return; }
+    if (tapping && e.key === 'Backspace') { e.preventDefault(); tapUndo(); return; }
+    if (!lines.length) return;
+    const step = { ArrowLeft: -0.5, ArrowRight: 0.5, '[': -5, ']': 5 }[e.key];
+    if (step === undefined) return;
+    e.preventDefault();
+    offset = +(offset + step).toFixed(1);
+    lastKey = '';
+  });
+
+  // ---- Fit the 420x750 card to any screen, phones included ----
+  const canvas = document.querySelector('.scrapbook-canvas');
+  function fitToScreen() {
+    if (!canvas) return;
+    const vv = window.visualViewport;
+    const w = vv ? vv.width : window.innerWidth;
+    const h = vv ? vv.height : window.innerHeight;
+    const scale = Math.min(w / 420, h / 750, 1.2);
+    const phone = w <= 600;
+
+    document.documentElement.style.overflow = 'hidden';
+    const b = document.body.style;
+    b.position = 'relative';
+    b.display = 'block';
+    b.margin = '0';
+    b.padding = '0';
+    b.minHeight = '0';
+    b.height = h + 'px';
+    b.overflow = 'hidden';
+    b.background = phone ? '#fef9db' : '#222';   // phone: yellow bars blend into the card
+
+    const c = canvas.style;
+    c.position = 'absolute';
+    c.left = '50%';
+    c.top = '50%';
+    c.transformOrigin = 'center center';
+    c.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    c.borderRadius = phone ? '0' : '12px';
+    c.boxShadow = phone ? 'none' : '0 20px 50px rgba(0,0,0,.5)';
+  }
+  fitToScreen();
+  window.addEventListener('resize', fitToScreen);
+  window.addEventListener('orientationchange', fitToScreen);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fitToScreen);
+
+  setInterval(() => { render(); updateHud(); }, 200);
+
+  // Start with whatever title/artist is already in your HTML
+  loadSong(titleEl.textContent, artistEl.textContent, 'song.mp3', true);
+})();
+</script>
+</body>
+</html>
